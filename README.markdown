@@ -1,5 +1,4 @@
-# godocdown
---
+# godocdown [![Build Status](https://drone.io/github.com/danielvargas/godocdown/status.png)](https://drone.io/github.com/danielvargas/godocdown/latest)
 Command godocdown generates Go documentation in a GitHub-friendly Markdown
 format.
 
