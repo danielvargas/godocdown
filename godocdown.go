@@ -11,5 +11,5 @@
 package godocdown
 
 import (
-	_ "github.com/robertkrimen/godocdown/godocdown"
+	_ "github.com/danielvargas/godocdown/godocdown"
 )

@@ -155,7 +155,7 @@ var DefaultStyle = Style{
 	SynopsisHeader:  "###",
 	SynopsisHeading: synopsisHeadingTitleCase1Word_Regexp,
 
-	UsageHeader: "## Usage\n",
+	IndexHeader: "### Index\n",
 
 	ConstantHeader:     "####",
 	VariableHeader:     "####",
@@ -189,7 +189,8 @@ type Style struct {
 	SynopsisHeader  string
 	SynopsisHeading *regexp.Regexp
 
-	UsageHeader string
+	//UsageHeader string
+	IndexHeader string
 
 	ConstantHeader     string
 	VariableHeader     string
@@ -220,6 +221,13 @@ func _formatIndent(target, indent, preIndent string) string {
 
 func spacer(width int) string {
 	return strings.Repeat(" ", width)
+}
+
+func linker(str string) string {
+	str = strings.TrimSpace(str)
+	re := regexp.MustCompile("[*\\(\\)]|[' ']")
+	tag := re.ReplaceAllString(strings.ToLower(str),"-")
+	return fmt.Sprintf("[%s](#%s)", str, tag)
 }
 
 func formatIndent(target string) string {
@@ -498,7 +506,7 @@ func (self *_document) EmitUsage() string {
 }
 
 func (self *_document) EmitUsageTo(buffer *bytes.Buffer) {
-	renderUsageTo(buffer, self)
+	renderIndexTo(buffer, self)
 }
 
 var templateNameList = strings.Fields(`
