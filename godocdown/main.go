@@ -225,8 +225,9 @@ func spacer(width int) string {
 
 func linker(str string) string {
 	str = strings.TrimSpace(str)
-	re := regexp.MustCompile("[*\\(\\)]|[' ']")
-	tag := re.ReplaceAllString(strings.ToLower(str),"-")
+	re := regexp.MustCompile("[*\\(\\)]")
+	tag := re.ReplaceAllString(strings.ToLower(str), "")
+	tag = strings.Replace(tag, " ", "-",-1)
 	return fmt.Sprintf("[%s](#%s)", str, tag)
 }
 
