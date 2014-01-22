@@ -14,15 +14,15 @@ func renderIndexSectionTo(writer io.Writer, document *_document) {
 	if len(document.pkg.Vars) != 0 {
 		fmt.Fprintf(writer, "* %s\n", linker("Variables"))
 	}
-	for _, entry := range document.pkg.Funcs {
-		receiver := " "
-		if entry.Recv != "" {
-			receiver = fmt.Sprintf("(%s) ", entry.Recv)
-		}
-		fmt.Fprintf(writer, "* %s\n", linker("func "+receiver+entry.Name))
-	}
 	for _, entry := range document.pkg.Types {
 		fmt.Fprintf(writer, "* %s\n", linker("type "+entry.Name))
+    for _, m := range entry.Funcs {
+			receiver := " "
+			if m.Recv != "" {
+				receiver = fmt.Sprintf("(%s) ", m.Recv)
+			}
+			fmt.Fprintf(writer, "    + %s\n", linker("func "+receiver+m.Name))
+		}
 		for _, m := range entry.Methods {
 			receiver := " "
 			if m.Recv != "" {
@@ -30,7 +30,6 @@ func renderIndexSectionTo(writer io.Writer, document *_document) {
 			}
 			fmt.Fprintf(writer, "    + %s\n", linker("func "+receiver+m.Name))
 		}
-
 	}
 	fmt.Fprintf(writer, "\n\n")
 }
@@ -107,7 +106,7 @@ func renderIndexTo(writer io.Writer, document *_document) {
 		renderVariableSectionTo(writer, document.pkg.Vars)
 	}
 	// Function Section
-	renderFunctionSectionTo(writer, document.pkg.Funcs, false)
+	//renderFunctionSectionTo(writer, document.pkg.Funcs, false)
 
 	// Type Section
 	renderTypeSectionTo(writer, document.pkg.Types)
