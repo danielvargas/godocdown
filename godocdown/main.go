@@ -227,7 +227,7 @@ func linker(str string) string {
 	str = strings.TrimSpace(str)
 	re := regexp.MustCompile("[*\\(\\)]")
 	tag := re.ReplaceAllString(strings.ToLower(str), "")
-	tag = strings.Replace(tag, " ", "-",-1)
+	tag = strings.Replace(tag, " ", "-", -1)
 	return fmt.Sprintf("[%s](#%s)", str, tag)
 }
 

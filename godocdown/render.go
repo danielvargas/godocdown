@@ -14,9 +14,16 @@ func renderIndexSectionTo(writer io.Writer, document *_document) {
 	if len(document.pkg.Vars) != 0 {
 		fmt.Fprintf(writer, "* %s\n", linker("Variables"))
 	}
+	for _, entry := range document.pkg.Funcs {
+		receiver := " "
+		if entry.Recv != "" {
+			receiver = fmt.Sprintf("(%s) ", entry.Recv)
+		}
+		fmt.Fprintf(writer, "* %s\n", linker("func "+receiver+entry.Name))
+	}
 	for _, entry := range document.pkg.Types {
 		fmt.Fprintf(writer, "* %s\n", linker("type "+entry.Name))
-    for _, m := range entry.Funcs {
+		for _, m := range entry.Funcs {
 			receiver := " "
 			if m.Recv != "" {
 				receiver = fmt.Sprintf("(%s) ", m.Recv)
@@ -106,7 +113,7 @@ func renderIndexTo(writer io.Writer, document *_document) {
 		renderVariableSectionTo(writer, document.pkg.Vars)
 	}
 	// Function Section
-	//renderFunctionSectionTo(writer, document.pkg.Funcs, false)
+	renderFunctionSectionTo(writer, document.pkg.Funcs, false)
 
 	// Type Section
 	renderTypeSectionTo(writer, document.pkg.Types)
