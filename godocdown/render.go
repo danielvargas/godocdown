@@ -7,6 +7,7 @@ import (
 )
 
 func renderIndexSectionTo(writer io.Writer, document *_document) {
+
 	fmt.Fprintf(writer, "%s\n", RenderStyle.IndexHeader)
 	if len(document.pkg.Consts) != 0 {
 		fmt.Fprintf(writer, "* %s\n", linker("Constants"))
@@ -16,6 +17,9 @@ func renderIndexSectionTo(writer io.Writer, document *_document) {
 	}
 	for _, entry := range document.pkg.Funcs {
 		receiver := " "
+		if *flag_flavor == "bitbucket" {
+			receiver = ""
+		}
 		if entry.Recv != "" {
 			receiver = fmt.Sprintf("(%s) ", entry.Recv)
 		}
@@ -25,6 +29,9 @@ func renderIndexSectionTo(writer io.Writer, document *_document) {
 		fmt.Fprintf(writer, "* %s\n", linker("type "+entry.Name))
 		for _, m := range entry.Funcs {
 			receiver := " "
+			if *flag_flavor == "bitbucket" {
+				receiver = ""
+			}
 			if m.Recv != "" {
 				receiver = fmt.Sprintf("(%s) ", m.Recv)
 			}
@@ -32,6 +39,9 @@ func renderIndexSectionTo(writer io.Writer, document *_document) {
 		}
 		for _, m := range entry.Methods {
 			receiver := " "
+			if *flag_flavor == "bitbucket" {
+				receiver = ""
+			}
 			if m.Recv != "" {
 				receiver = fmt.Sprintf("(%s) ", m.Recv)
 			}
