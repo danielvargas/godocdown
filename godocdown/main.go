@@ -9,11 +9,11 @@ Command godocdown generates Go documentation in a GitHub-friendly Markdown forma
     $ godocdown > README.markdown                                                
                                                                                  
     # Generate standard Markdown                                                 
-    $ godocdown -plain .                                                         
+    $ godocdown -flavor="plain" .                                                
 
 This program is targeted at providing nice-looking documentation for GitHub. With this in
 mind, it generates GitHub Flavored Markdown (http://github.github.com/github-flavored-markdown/) by
-default. This can be changed with the use of the "plain" flag to generate standard Markdown.
+default. This can be changed with the use of the "flavor" flag to generate standard Markdown.
 
 Install
 
@@ -35,7 +35,12 @@ Usage
     -no-template=false                                                               
         Disable template processing                                                  
                                                                                      
-    -plain=false                                                                     
+    -flavor="github"                                                                 
+        github: Github Flavored Markdown                                             
+        plain: Plain Flavored Markdown                                               
+        bitbucket: Bitbucket Flavored Markdown                                       
+
+    -bitb=false                                                                      
         Emit standard Markdown, rather than Github Flavored Markdown                 
                                                                                      
     -heading="TitleCase1Word"                                                        
@@ -123,7 +128,7 @@ const (
 var (
 	flag            = Flag.NewFlagSet("", Flag.ExitOnError)
 	flag_signature  = flag.Bool("signature", false, string(0))
-	flag_plain      = flag.Bool("plain", false, "Emit standard Markdown, rather than Github Flavored Markdown (the default)")
+	flag_flavor      = flag.String("flavor", "github", "Markdown Flavor: github, plain, bitbucket")
 	flag_heading    = flag.String("heading", "TitleCase1Word", "Heading detection method: 1Word, TitleCase, Title, TitleCase1Word, \"\"")
 	flag_template   = flag.String("template", "", "The template file to use")
 	flag_noTemplate = flag.Bool("no-template", false, "Disable template processing")
@@ -228,6 +233,9 @@ func linker(str string) string {
 	re := regexp.MustCompile("[*\\(\\)]")
 	tag := re.ReplaceAllString(strings.ToLower(str), "")
 	tag = strings.Replace(tag, " ", "-", -1)
+	if *flag_flavor == "bitbucket" {
+		tag = "markdown-header-" + tag
+	}
 	return fmt.Sprintf("[%s](#%s)", str, tag)
 }
 
@@ -236,7 +244,7 @@ func formatIndent(target string) string {
 }
 
 func indentCode(target string) string {
-	if *flag_plain {
+	if *flag_flavor == "plain" || *flag_flavor == "bitbucket" {
 		return indent(target+"\n", spacer(4))
 	}
 	return fmt.Sprintf("```go\n%s\n```", target)
